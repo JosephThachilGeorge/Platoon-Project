@@ -1,4 +1,13 @@
-#include <kilolib.h>
+#include <math.h>
+#include <kilombo.h>
+#include "platoon.h"
+
+#ifdef SIMULATOR
+#include <stdio.h> // for printf
+#include <stdlib.h>
+#else
+#include <avr/io.h>  // for microcontroller register defs
+#endif
 
 #define RED RGB(3,0,0)
 #define GREEN RGB(0,3,0)
@@ -22,24 +31,7 @@
 #define LEAVE_TIME 2500
 #define END_TIME 20000
 
-typedef struct {
-	uint8_t cur_distance;
-	uint8_t new_message;
-	distance_measurement_t dist;
-	message_t received_msg;
-	message_t transmit_msg;
-	uint8_t my_leader;
-    uint8_t joining;
-    uint8_t following;
-	int message_timestamp;
-	int turning;
-	int myClock;
-	int turn_timestamp;
-	int follower_id;
-    int follow_timestamp;
-} USERDATA;
-
-USERDATA* mydata;
+REGISTER_USERDATA(USERDATA)
 
 void message_rx(message_t *m, distance_measurement_t *d) {
     mydata->new_message = 1;
